@@ -24,14 +24,15 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 func main() {
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Welcome to the main page :)")
-	})
 	err := godotenv.Load()
 	if err != nil {
 		return
 	}
+	e.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Welcome to the main page :)")
+	})
 	routes.CompanyRoutes(e)
+	routes.CurrencyRoutes(e)
 	e.Logger.Fatal(e.Start(":9031"))
 
 }

@@ -4,16 +4,18 @@ import (
 	_ "encoding/json"
 	"gorm.io/gorm"
 	"quders/pkg/config"
+	"time"
 )
 
 var db *gorm.DB
 
 type Currency struct {
-	gorm.Model
-	Name      string `json:"name"`
-	Code      string `json:"code"`
-	IsActive  string `json:"isActive"`
-	CreatedAt string `json:"createdAt"`
+	//gorm.Model
+	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement;not null"`
+	Name      string    `json:"name" gorm:"index"`
+	Code      string    `json:"code"`
+	IsActive  bool      `json:"isActive"`
+	CreatedAt time.Time `json:"createdAt" gorm:"autoCreateTime"`
 }
 
 func init() {
