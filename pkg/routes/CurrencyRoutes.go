@@ -5,9 +5,10 @@ import (
 	"quders/pkg/controllers"
 )
 
-func CurrencyRoutes(e *echo.Echo) {
-	e.GET("/api/v1/currency", controllers.GetCurrencies)
-	e.GET("/api/v1/currency/:id", controllers.GetCurrencyById)
-	e.POST("/api/v1/currency", controllers.CreateCurrency)
-	e.PUT("/api/v1/currency", controllers.UpdateCurrency)
+func CurrencyRoutes(e *echo.Echo, handler *controllers.Handler) {
+	g := e.Group("/api/v1")
+	g.GET("/currency", handler.GetCurrencies)
+	g.GET("/currency/:id", handler.GetCurrencyById)
+	g.POST("/currency", handler.CreateCurrency)
+	g.PUT("/currency", handler.UpdateCurrency)
 }

@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"gopkg.in/validator.v2"
 	"net/http"
+	_ "quders/pkg/routes"
 	"quders/pkg/utils"
 	"reflect"
 	"time"
@@ -38,17 +39,18 @@ func init() {
 	}
 }
 
-func GetCurrencies(c echo.Context) error {
+func (h *Handler) GetCurrencies(c echo.Context) error {
+	currencies := h.currencyRepository.GetCurrencies()
+	response := utils.ReplyUtil(true, currencies, "success")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (h *Handler) GetCurrencyById(c echo.Context) error {
 	response := utils.ReplyUtil(true, "", "success")
 	return c.JSON(http.StatusOK, response)
 }
 
-func GetCurrencyById(c echo.Context) error {
-	response := utils.ReplyUtil(true, "", "success")
-	return c.JSON(http.StatusOK, response)
-}
-
-func CreateCurrency(c echo.Context) error {
+func (h *Handler) CreateCurrency(c echo.Context) error {
 	var newCurrency = new(Currency)
 	err := json.NewDecoder(c.Request().Body).Decode(&newCurrency)
 	if err != nil {
@@ -66,7 +68,7 @@ func CreateCurrency(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func UpdateCurrency(c echo.Context) error {
+func (h *Handler) UpdateCurrency(c echo.Context) error {
 	response := utils.ReplyUtil(true, "", "success")
 	return c.JSON(http.StatusOK, response)
 }
