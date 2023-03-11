@@ -4,11 +4,9 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	"quders/pkg/repository"
 )
 
 type Handler struct {
-	currencyRepository repository.CurrencyRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -24,8 +22,6 @@ func CreateNewRouter() *echo.Echo {
 	return e
 }
 
-func NewHandler(cr repository.CurrencyRepository) *Handler {
-	return &Handler{
-		currencyRepository: cr,
-	}
+func NewHandler() *Handler {
+	return &Handler{}
 }
