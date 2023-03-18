@@ -2,11 +2,13 @@ package repository
 
 import (
 	"database/pkg/models"
+	"database/pkg/utils/redis"
+	"errors"
 	"gorm.io/gorm"
 )
 
 type CurrencyRepository interface {
-	CreateCurrency(currency *models.Currency) *models.Currency
+	CreateCurrency(currency models.Currency) error
 	GetCurrencies() []models.Currency
 	GetCurrencyById(Id int64) (*models.Currency, *gorm.DB)
 	GetCurrencyByCode(code string) (*models.Currency, *gorm.DB)
@@ -14,18 +16,36 @@ type CurrencyRepository interface {
 }
 
 type CurrencyStore struct {
-	db *gorm.DB
+	db          *gorm.DB
+	qudersRedis *redis.QudersRedis
 }
 
-func NewCurrencyStore(db *gorm.DB) *CurrencyStore {
+func NewCurrencyStore(db *gorm.DB, qudersRedis *redis.QudersRedis) *CurrencyStore {
 	return &CurrencyStore{
-		db: db,
+		db:          db,
+		qudersRedis: qudersRedis,
 	}
 }
 
-func (currencyStore *CurrencyStore) CreateCurrency(currency *models.Currency) *models.Currency {
-	currencyStore.db.Create(&currency)
-	return currency
+func (currencyStore *CurrencyStore) CreateCurrency(currency models.Currency) error {
+	var existCurrency models.Currency
+	var count int64
+	err := currencyStore.db.Where("name=? or (code != '' and code != ?)", currency.Name, currency.Code).Find(&existCurrency).Count(&count)
+	if err.Error != nil {
+		return errors.New("currency check error" + err.Error.Error())
+	}
+	if count > 0 {
+		return errors.New("currency is already exist")
+	}
+	result := currencyStore.db.Create(&currency)
+	if result.Error != nil {
+		return errors.New("create currency error: " + result.Error.Error())
+	}
+	if result.RowsAffected <= 0 {
+		return errors.New("currency not created: " + result.Error.Error())
+	}
+
+	return nil
 }
 
 func (currencyStore *CurrencyStore) GetCurrencies() []models.Currency {

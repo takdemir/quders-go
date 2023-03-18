@@ -5,12 +5,15 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+	"gorm.io/gorm"
 )
 
 type Handler struct {
+	DB                 *gorm.DB
 	CurrencyRepository repository.CurrencyRepository
 	UserRepository     repository.UserRepository
 	CompanyRepository  repository.CompanyRepository
+	CountryRepository  repository.CountryRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -27,13 +30,17 @@ func CreateNewRouter() *echo.Echo {
 }
 
 func NewHandler(
+	db *gorm.DB,
 	currencyRepo repository.CurrencyRepository,
 	userRepo repository.UserRepository,
 	companyRepo repository.CompanyRepository,
+	countryRepo repository.CountryRepository,
 ) *Handler {
 	return &Handler{
+		DB:                 db,
 		CurrencyRepository: currencyRepo,
 		UserRepository:     userRepo,
 		CompanyRepository:  companyRepo,
+		CountryRepository:  countryRepo,
 	}
 }

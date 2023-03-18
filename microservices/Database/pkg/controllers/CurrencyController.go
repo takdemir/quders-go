@@ -1,41 +1,20 @@
 package controllers
 
 import (
+	"database/pkg/models"
 	"database/pkg/utils/common"
 	"encoding/json"
-	"errors"
-	"fmt"
 	"github.com/labstack/echo/v4"
-	"gopkg.in/validator.v2"
+	"gopkg.in/go-playground/validator.v9"
 	"net/http"
-	"reflect"
 	"time"
 )
 
 type Currency struct {
-	Name      string    `json:"name" validate:"validateName"`
+	Name      string    `json:"name"`
 	Code      string    `json:"code"`
 	IsActive  bool      `json:"isActive"`
 	CreatedAt time.Time `json:"createdAt"`
-}
-
-func ValidateName(v interface{}, param string) error {
-	st := reflect.ValueOf(v)
-	if st.Kind() != reflect.String {
-		return errors.New("parameter type must be string")
-	}
-
-	if !common.RegexpString("^[a-zA-Z]{2,10}$", v.(string)) {
-		return errors.New("name is invalid. must be at least 2 only letter chars")
-	}
-	return nil
-}
-
-func init() {
-	err := validator.SetValidationFunc("validateName", ValidateName)
-	if err != nil {
-		return
-	}
 }
 
 func (h *Handler) GetCurrencies(c echo.Context) error {
@@ -50,19 +29,25 @@ func (h *Handler) GetCurrencyById(c echo.Context) error {
 }
 
 func (h *Handler) CreateCurrency(c echo.Context) error {
-	var newCurrency = new(Currency)
+	var newCurrency = models.Currency{}
 	err := json.NewDecoder(c.Request().Body).Decode(&newCurrency)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
-	errValidation := validator.Validate(newCurrency)
-	fmt.Println(errValidation)
-	if errValidation != nil {
-		response := common.ReplyUtil(false, errValidation.Error(), "success")
-		return c.JSON(http.StatusOK, response)
+	v := validator.New()
+	validateError := v.Struct(newCurrency)
+	if validateError != nil {
+		for _, v := range validateError.(validator.ValidationErrors) {
+			response := common.ReplyUtil(false, "", "invalid field "+v.Field())
+			return c.JSON(http.StatusBadRequest, response)
+		}
 	}
-	fmt.Println(newCurrency)
+	err = h.CurrencyRepository.CreateCurrency(newCurrency)
+	if err != nil {
+		response := common.ReplyUtil(false, "", err.Error())
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	response := common.ReplyUtil(true, "", "success")
 	return c.JSON(http.StatusOK, response)
 }

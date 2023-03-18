@@ -41,7 +41,7 @@ func (company *CompanyStore) CreateCompany(newCompany models.Company) error {
 		return errors.New("error on company create: " + result.Error.Error())
 	}
 
-	if result.RowsAffected < 0 {
+	if result.RowsAffected <= 0 {
 		return errors.New("no company created" + result.Error.Error())
 	}
 	return nil
@@ -61,7 +61,7 @@ func (company *CompanyStore) UpdateCompany(companyId int, updatedCompanyDetail m
 	companyDetail.Name = updatedCompanyDetail.Name
 	companyDetail.IsActive = updatedCompanyDetail.IsActive
 	result = company.db.Save(&companyDetail)
-	if result.RowsAffected < 0 {
+	if result.RowsAffected <= 0 {
 		return errors.New("company update error")
 	}
 	return nil
