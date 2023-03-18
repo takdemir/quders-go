@@ -12,7 +12,10 @@ import (
 var rdb *redis.Client
 var ctx context.Context
 
-func Connect(redisEnvName string) {
+type QudersRedis struct {
+}
+
+func (br *QudersRedis) Connect(redisEnvName string) {
 	connectionStrings := ConnectionStringParser(os.Getenv(redisEnvName))
 	if len(connectionStrings) < 4 {
 		errorMessage := "redis connection string error"
@@ -55,7 +58,7 @@ func Connect(redisEnvName string) {
 	ctx = context.Background()
 }
 
-func Get(key string) (string, error) {
+func (br *QudersRedis) Get(key string) (string, error) {
 	val, err := rdb.Get(ctx, key).Result()
 	if err != nil {
 		return "", err
@@ -63,7 +66,7 @@ func Get(key string) (string, error) {
 	return val, nil
 }
 
-func Set(key string, value interface{}) error {
+func (br *QudersRedis) Set(key string, value interface{}) error {
 	err := rdb.Set(ctx, key, value, 0).Err()
 	if err != nil {
 		return err

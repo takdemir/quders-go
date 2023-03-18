@@ -1,6 +1,7 @@
 package config
 
 import (
+	"database/pkg/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -26,4 +27,15 @@ func Connect() *gorm.DB {
 		panic(err)
 	}
 	return db
+}
+
+func AutoMigrate(db *gorm.DB) {
+	err := db.AutoMigrate(
+		&models.Currency{},
+		&models.Company{},
+		&models.User{},
+	)
+	if err != nil {
+		return
+	}
 }

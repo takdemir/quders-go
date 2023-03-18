@@ -10,6 +10,7 @@ import (
 type Handler struct {
 	CurrencyRepository repository.CurrencyRepository
 	UserRepository     repository.UserRepository
+	CompanyRepository  repository.CompanyRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -28,9 +29,11 @@ func CreateNewRouter() *echo.Echo {
 func NewHandler(
 	currencyRepo repository.CurrencyRepository,
 	userRepo repository.UserRepository,
+	companyRepo repository.CompanyRepository,
 ) *Handler {
 	return &Handler{
 		CurrencyRepository: currencyRepo,
 		UserRepository:     userRepo,
+		CompanyRepository:  companyRepo,
 	}
 }
