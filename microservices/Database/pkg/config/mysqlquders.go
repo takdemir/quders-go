@@ -34,6 +34,7 @@ func AutoMigrate(db *gorm.DB) {
 		&models.Currency{},
 		&models.Company{},
 		&models.User{},
+		&models.Country{},
 	)
 	if err != nil {
 		return

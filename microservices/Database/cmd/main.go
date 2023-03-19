@@ -38,16 +38,19 @@ func main() {
 	currencyRepository := repository.NewCurrencyStore(mysqlDB, qudersRedis)
 	companyRepository := repository.NewCompanyStore(mysqlDB, qudersRedis)
 	countryRepository := repository.NewCountryStore(mysqlDB, qudersRedis)
+	companyDetailRepository := repository.NewCompanyDetailStore(mysqlDB, qudersRedis)
 	handler := controllers.NewHandler(
 		mysqlDB,
 		currencyRepository,
 		userRepository,
 		companyRepository,
 		countryRepository,
+		companyDetailRepository,
 	)
 	g := e.Group("/api/v1", middleware.JWTWithConfig(utils.JWTSecretKey, handler))
 	routes.CurrencyRoutes(g, handler)
 	routes.CompanyRoutes(g, handler)
 	routes.CountryRoutes(g, handler)
+	routes.CompanyDetailRoutes(g, handler)
 	e.Logger.Fatal(e.Start(":9029"))
 }

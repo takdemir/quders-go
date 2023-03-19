@@ -45,15 +45,28 @@ func (h *Handler) CreateCountry(c echo.Context) error {
 	}
 	fmt.Println(currency)*/
 	jsonMap := models.Country{}
+	checkCountry := models.Country{}
+	var checkCountryCount int64
 	err := json.NewDecoder(c.Request().Body).Decode(&jsonMap)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
+
+	h.DB.Table("country").Where("code=?", jsonMap.Code).Find(&checkCountry).Count(&checkCountryCount)
+	if checkCountryCount > 0 {
+		response := common.ReplyUtil(false, "", "country code is already exist")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	var currency models.Currency
 	h.DB.Table("currency").Where("id=?", jsonMap.CurrencyId).Find(&currency)
 
 	if err != nil {
 		return err
+	}
+	if currency.ID == 0 {
+		response := common.ReplyUtil(false, "", "invalid currency")
+		return c.JSON(http.StatusBadRequest, response)
 	}
 	jsonMap.Currency = currency
 	fmt.Println(jsonMap)
@@ -81,20 +94,39 @@ func (h *Handler) UpdateCountry(c echo.Context) error {
 		response := common.ReplyUtil(false, "", "country json parse error"+err.Error())
 		return c.JSON(http.StatusBadRequest, response)
 	}
-	v := validator.New()
-	err = v.Struct(jsonMap)
-	if err != nil {
-		for _, valError := range err.(validator.ValidationErrors) {
-			response := common.ReplyUtil(false, "", "no valid field "+valError.Field())
-			return c.JSON(http.StatusBadRequest, response)
-		}
-	}
+
 	countryIdParam := c.Param("id")
 	if strings.TrimSpace(countryIdParam) == "" {
 		response := common.ReplyUtil(false, "", "no valid country id")
 		return c.JSON(http.StatusBadRequest, response)
 	}
 	countryId, _ := strconv.Atoi(countryIdParam)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	var currency models.Currency
+	h.DB.Table("currency").Where("id=?", jsonMap.CurrencyId).Find(&currency)
+	if currency.ID == 0 {
+		response := common.ReplyUtil(false, "", "invalid currency")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	jsonMap.Currency = currency
+
+	v := validator.New()
+	err = v.Struct(jsonMap)
+	if err != nil {
+		for _, valError := range err.(validator.ValidationErrors) {
+			response := common.ReplyUtil(false, "", "no valid field "+fmt.Sprint(valError))
+			return c.JSON(http.StatusBadRequest, response)
+		}
+	}
+	var checkCountry models.Country
+	h.DB.Table("country").Where("code=?", jsonMap.Code).Find(&checkCountry)
+	if checkCountry.ID != uint(countryId) {
+		response := common.ReplyUtil(false, "", "country code is already exist")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
 	err = h.CountryRepository.UpdateCountry(countryId, jsonMap)
 	if err != nil {
 		response := common.ReplyUtil(false, "", "update error: "+err.Error())

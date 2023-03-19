@@ -30,7 +30,7 @@ func NewCountryStore(
 
 func (country *CountryStore) FetchCountries() ([]models.Country, error) {
 	var countries []models.Country
-	result := country.db.Find(&countries)
+	result := country.db.Preload("Currency").Find(&countries)
 	if result.Error != nil {
 		return nil, errors.New("fetch countries error: " + result.Error.Error())
 	}
@@ -39,7 +39,7 @@ func (country *CountryStore) FetchCountries() ([]models.Country, error) {
 
 func (country *CountryStore) FetchCountryById(countryId int) (*models.Country, error) {
 	var countryDetail models.Country
-	result := country.db.Where("id=?", countryId).Find(&countryDetail)
+	result := country.db.Where("id=?", countryId).Preload("Currency").Find(&countryDetail)
 	if result.Error != nil {
 		return nil, errors.New("fetch countries error: " + result.Error.Error())
 	}
@@ -62,7 +62,7 @@ func (country *CountryStore) CreateCountry(newCountry models.Country) error {
 
 func (country *CountryStore) UpdateCountry(countryId int, newCountry models.Country) error {
 	var countryDetail models.Country
-	result := country.db.Where("id=?", countryId).Find(countryDetail)
+	result := country.db.Where("id=?", countryId).First(&countryDetail)
 	if result.Error != nil {
 		return errors.New("update country error: " + result.Error.Error())
 	}
@@ -72,7 +72,7 @@ func (country *CountryStore) UpdateCountry(countryId int, newCountry models.Coun
 	countryDetail.Name = newCountry.Name
 	countryDetail.Code = newCountry.Code
 	countryDetail.IsActive = newCountry.IsActive
-	result = country.db.Save(countryDetail)
+	result = country.db.Model(&countryDetail).Updates(countryDetail)
 	if result.Error != nil {
 		return errors.New("update country error: " + result.Error.Error())
 	}
