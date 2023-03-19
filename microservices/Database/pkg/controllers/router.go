@@ -16,6 +16,8 @@ type Handler struct {
 	CountryRepository           repository.CountryRepository
 	CompanyDetailRepository     repository.CompanyDetailRepository
 	AgreementAndTermsRepository repository.AgreementAndTermsRepository
+	NotificationEventRepository repository.NotificationEventRepository
+	NotificationRepository      repository.NotificationRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -39,6 +41,8 @@ func NewHandler(
 	countryRepo repository.CountryRepository,
 	companyDetailRepo repository.CompanyDetailRepository,
 	agreementAndTermsRepo repository.AgreementAndTermsRepository,
+	notificationEventRepo repository.NotificationEventRepository,
+	notificationRepo repository.NotificationRepository,
 ) *Handler {
 	return &Handler{
 		DB:                          db,
@@ -48,5 +52,7 @@ func NewHandler(
 		CountryRepository:           countryRepo,
 		CompanyDetailRepository:     companyDetailRepo,
 		AgreementAndTermsRepository: agreementAndTermsRepo,
+		NotificationEventRepository: notificationEventRepo,
+		NotificationRepository:      notificationRepo,
 	}
 }

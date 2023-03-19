@@ -40,6 +40,8 @@ func main() {
 	countryRepository := repository.NewCountryStore(mysqlDB, qudersRedis)
 	companyDetailRepository := repository.NewCompanyDetailStore(mysqlDB, qudersRedis)
 	agreementAndTermsRepository := repository.NewAgreementAndTermsStore(mysqlDB, qudersRedis)
+	notificationEventRepository := repository.NewNotificationEventStore(mysqlDB, qudersRedis)
+	notificationRepository := repository.NewNotificationStore(mysqlDB, qudersRedis)
 	handler := controllers.NewHandler(
 		mysqlDB,
 		currencyRepository,
@@ -48,6 +50,8 @@ func main() {
 		countryRepository,
 		companyDetailRepository,
 		agreementAndTermsRepository,
+		notificationEventRepository,
+		notificationRepository,
 	)
 	g := e.Group("/api/v1", middleware.JWTWithConfig(utils.JWTSecretKey, handler))
 	routes.CurrencyRoutes(g, handler)
@@ -55,5 +59,6 @@ func main() {
 	routes.CountryRoutes(g, handler)
 	routes.CompanyDetailRoutes(g, handler)
 	routes.AgreementAndTermsRoutes(g, handler)
+	routes.NotificationRoutes(g, handler)
 	e.Logger.Fatal(e.Start(":9029"))
 }
