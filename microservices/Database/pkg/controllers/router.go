@@ -19,6 +19,7 @@ type Handler struct {
 	NotificationEventRepository  repository.NotificationEventRepository
 	NotificationRepository       repository.NotificationRepository
 	ProgramingLanguageRepository repository.ProgramingLanguageRepository
+	FrameworkRepository          repository.FrameworkRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -45,6 +46,7 @@ func NewHandler(
 	notificationEventRepo repository.NotificationEventRepository,
 	notificationRepo repository.NotificationRepository,
 	programingLanguageRepo repository.ProgramingLanguageRepository,
+	frameworkRepo repository.FrameworkRepository,
 ) *Handler {
 	return &Handler{
 		DB:                           db,
@@ -57,5 +59,6 @@ func NewHandler(
 		NotificationEventRepository:  notificationEventRepo,
 		NotificationRepository:       notificationRepo,
 		ProgramingLanguageRepository: programingLanguageRepo,
+		FrameworkRepository:          frameworkRepo,
 	}
 }
