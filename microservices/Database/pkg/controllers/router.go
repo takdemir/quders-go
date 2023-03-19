@@ -9,12 +9,13 @@ import (
 )
 
 type Handler struct {
-	DB                      *gorm.DB
-	CurrencyRepository      repository.CurrencyRepository
-	UserRepository          repository.UserRepository
-	CompanyRepository       repository.CompanyRepository
-	CountryRepository       repository.CountryRepository
-	CompanyDetailRepository repository.CompanyDetailRepository
+	DB                          *gorm.DB
+	CurrencyRepository          repository.CurrencyRepository
+	UserRepository              repository.UserRepository
+	CompanyRepository           repository.CompanyRepository
+	CountryRepository           repository.CountryRepository
+	CompanyDetailRepository     repository.CompanyDetailRepository
+	AgreementAndTermsRepository repository.AgreementAndTermsRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -37,13 +38,15 @@ func NewHandler(
 	companyRepo repository.CompanyRepository,
 	countryRepo repository.CountryRepository,
 	companyDetailRepo repository.CompanyDetailRepository,
+	agreementAndTermsRepo repository.AgreementAndTermsRepository,
 ) *Handler {
 	return &Handler{
-		DB:                      db,
-		CurrencyRepository:      currencyRepo,
-		UserRepository:          userRepo,
-		CompanyRepository:       companyRepo,
-		CountryRepository:       countryRepo,
-		CompanyDetailRepository: companyDetailRepo,
+		DB:                          db,
+		CurrencyRepository:          currencyRepo,
+		UserRepository:              userRepo,
+		CompanyRepository:           companyRepo,
+		CountryRepository:           countryRepo,
+		CompanyDetailRepository:     companyDetailRepo,
+		AgreementAndTermsRepository: agreementAndTermsRepo,
 	}
 }
