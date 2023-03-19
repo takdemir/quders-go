@@ -42,6 +42,7 @@ func main() {
 	agreementAndTermsRepository := repository.NewAgreementAndTermsStore(mysqlDB, qudersRedis)
 	notificationEventRepository := repository.NewNotificationEventStore(mysqlDB, qudersRedis)
 	notificationRepository := repository.NewNotificationStore(mysqlDB, qudersRedis)
+	programingLanguageRepository := repository.NewProgramingLanguageStore(mysqlDB, qudersRedis)
 	handler := controllers.NewHandler(
 		mysqlDB,
 		currencyRepository,
@@ -52,6 +53,7 @@ func main() {
 		agreementAndTermsRepository,
 		notificationEventRepository,
 		notificationRepository,
+		programingLanguageRepository,
 	)
 	g := e.Group("/api/v1", middleware.JWTWithConfig(utils.JWTSecretKey, handler))
 	routes.CurrencyRoutes(g, handler)
@@ -60,5 +62,6 @@ func main() {
 	routes.CompanyDetailRoutes(g, handler)
 	routes.AgreementAndTermsRoutes(g, handler)
 	routes.NotificationRoutes(g, handler)
+	routes.ProgramingLanguageRoutes(g, handler)
 	e.Logger.Fatal(e.Start(":9029"))
 }

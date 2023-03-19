@@ -9,15 +9,16 @@ import (
 )
 
 type Handler struct {
-	DB                          *gorm.DB
-	CurrencyRepository          repository.CurrencyRepository
-	UserRepository              repository.UserRepository
-	CompanyRepository           repository.CompanyRepository
-	CountryRepository           repository.CountryRepository
-	CompanyDetailRepository     repository.CompanyDetailRepository
-	AgreementAndTermsRepository repository.AgreementAndTermsRepository
-	NotificationEventRepository repository.NotificationEventRepository
-	NotificationRepository      repository.NotificationRepository
+	DB                           *gorm.DB
+	CurrencyRepository           repository.CurrencyRepository
+	UserRepository               repository.UserRepository
+	CompanyRepository            repository.CompanyRepository
+	CountryRepository            repository.CountryRepository
+	CompanyDetailRepository      repository.CompanyDetailRepository
+	AgreementAndTermsRepository  repository.AgreementAndTermsRepository
+	NotificationEventRepository  repository.NotificationEventRepository
+	NotificationRepository       repository.NotificationRepository
+	ProgramingLanguageRepository repository.ProgramingLanguageRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -43,16 +44,18 @@ func NewHandler(
 	agreementAndTermsRepo repository.AgreementAndTermsRepository,
 	notificationEventRepo repository.NotificationEventRepository,
 	notificationRepo repository.NotificationRepository,
+	programingLanguageRepo repository.ProgramingLanguageRepository,
 ) *Handler {
 	return &Handler{
-		DB:                          db,
-		CurrencyRepository:          currencyRepo,
-		UserRepository:              userRepo,
-		CompanyRepository:           companyRepo,
-		CountryRepository:           countryRepo,
-		CompanyDetailRepository:     companyDetailRepo,
-		AgreementAndTermsRepository: agreementAndTermsRepo,
-		NotificationEventRepository: notificationEventRepo,
-		NotificationRepository:      notificationRepo,
+		DB:                           db,
+		CurrencyRepository:           currencyRepo,
+		UserRepository:               userRepo,
+		CompanyRepository:            companyRepo,
+		CountryRepository:            countryRepo,
+		CompanyDetailRepository:      companyDetailRepo,
+		AgreementAndTermsRepository:  agreementAndTermsRepo,
+		NotificationEventRepository:  notificationEventRepo,
+		NotificationRepository:       notificationRepo,
+		ProgramingLanguageRepository: programingLanguageRepo,
 	}
 }
