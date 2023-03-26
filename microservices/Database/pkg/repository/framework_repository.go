@@ -28,7 +28,7 @@ func NewFrameworkStore(db *gorm.DB, qudersRedis *redis.QudersRedis) *FrameworkSt
 
 func (pl *FrameworkStore) FetchFrameworks() ([]models.Framework, error) {
 	var Frameworks []models.Framework
-	result := pl.db.Find(&Frameworks)
+	result := pl.db.Preload("ProgramingLanguage").Find(&Frameworks)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -37,7 +37,7 @@ func (pl *FrameworkStore) FetchFrameworks() ([]models.Framework, error) {
 
 func (pl *FrameworkStore) FetchFrameworkById(frameworkId uint) (*models.Framework, error) {
 	var Framework models.Framework
-	result := pl.db.Where("id=?", frameworkId).First(&Framework)
+	result := pl.db.Preload("ProgramingLanguage").Where("id=?", frameworkId).First(&Framework)
 	if result.Error != nil {
 		return nil, result.Error
 	}
