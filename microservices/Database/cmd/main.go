@@ -46,6 +46,7 @@ func main() {
 	frameworkRepository := repository.NewFrameworkStore(mysqlDB, qudersRedis)
 	registrationQuestionRepository := repository.NewRegistrationQuestionStore(mysqlDB, qudersRedis)
 	questionAnswerRepository := repository.NewQuestionAnswerStore(mysqlDB, qudersRedis)
+	remindPasswordLogRepository := repository.NewRemindPasswordLogStore(mysqlDB, qudersRedis)
 	handler := controllers.NewHandler(
 		mysqlDB,
 		currencyRepository,
@@ -60,6 +61,7 @@ func main() {
 		frameworkRepository,
 		registrationQuestionRepository,
 		questionAnswerRepository,
+		remindPasswordLogRepository,
 	)
 	g := e.Group("/api/v1", middleware.JWTWithConfig(utils.JWTSecretKey, handler))
 	routes.CurrencyRoutes(g, handler)
@@ -72,5 +74,6 @@ func main() {
 	routes.FrameworkRoutes(g, handler)
 	routes.RegistrationQuestionRoutes(g, handler)
 	routes.QuestionAnswerRoutes(g, handler)
+	routes.RemindPasswordLogRoutes(g, handler)
 	e.Logger.Fatal(e.Start(":9029"))
 }

@@ -22,6 +22,7 @@ type Handler struct {
 	FrameworkRepository            repository.FrameworkRepository
 	RegistrationQuestionRepository repository.RegistrationQuestionRepository
 	QuestionAnswerRepository       repository.QuestionAnswerRepository
+	RemindPasswordLogRepository    repository.RemindPasswordLogRepository
 }
 
 func CreateNewRouter() *echo.Echo {
@@ -51,6 +52,7 @@ func NewHandler(
 	frameworkRepo repository.FrameworkRepository,
 	registrationQuestionRepo repository.RegistrationQuestionRepository,
 	questionAnswerRepo repository.QuestionAnswerRepository,
+	remindPasswordLogRepo repository.RemindPasswordLogRepository,
 ) *Handler {
 	return &Handler{
 		DB:                             db,
@@ -66,5 +68,6 @@ func NewHandler(
 		FrameworkRepository:            frameworkRepo,
 		RegistrationQuestionRepository: registrationQuestionRepo,
 		QuestionAnswerRepository:       questionAnswerRepo,
+		RemindPasswordLogRepository:    remindPasswordLogRepo,
 	}
 }
