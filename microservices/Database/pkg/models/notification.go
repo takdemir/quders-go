@@ -17,7 +17,7 @@ type Notification struct {
 	Severity            string            `json:"severity" gorm:"size:50"`
 	RelatedTo           string            `json:"relatedTo" gorm:"size:255"`
 	Region              string            `json:"region" gorm:"size:255"`
-	IsNotified          bool              `json:"isNotified" gorm:"not null"`
+	IsNotified          *bool             `json:"isNotified" gorm:"not null"`
 	NotifiedDate        time.Time         `json:"notifiedDate"`
 	ClosedAt            time.Time         `json:"closedAt"`
 	CreatedAt           time.Time         `json:"createdAt" gorm:"autoCreateTime"`

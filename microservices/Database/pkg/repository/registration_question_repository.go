@@ -71,8 +71,8 @@ func (rq *RegistrationQuestionStore) UpdateRegistrationQuestion(regId uint, newR
 	if result.Error != nil {
 		return result.Error
 	}
-	if result.RowsAffected == 0 {
+	/*	if result.RowsAffected == 0 {
 		return errors.New("could not update registration question")
-	}
+	}*/
 	return nil
 }

@@ -13,6 +13,6 @@ type CompanyDetail struct {
 	MobilePhone string    `json:"mobilePhone" gorm:"size:255"`
 	Address     string    `json:"address" gorm:"type:text"`
 	Address2    string    `json:"address2" gorm:"type:text"`
-	IsActive    bool      `json:"isActive" gorm:"not null"`
+	IsActive    *bool     `json:"isActive" gorm:"not null"`
 	CreatedAt   time.Time `json:"createdAt" gorm:"autoCreateTime"`
 }

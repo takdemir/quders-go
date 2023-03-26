@@ -9,8 +9,7 @@ type User struct {
 	Email       string    `json:"email" gorm:"size:255;not null;unique"`
 	Password    string    `json:"password" gorm:"size:255;not null;"`
 	MobilePhone string    `json:"mobilePhone" gorm:"size:20;not null;"`
-	Title       string    `json:"title" gorm:"size:100;not null;"`
-	IsActive    bool      `json:"isActive" gorm:"not null;"`
+	IsActive    *bool     `json:"isActive" gorm:"not null;"`
 	Roles       []string  `json:"roles" gorm:"serializer:json;not null"`
 	CreatedAt   time.Time `json:"createdAt" gorm:"autoCreateTime"`
 }

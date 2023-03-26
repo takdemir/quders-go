@@ -45,6 +45,7 @@ func main() {
 	programingLanguageRepository := repository.NewProgramingLanguageStore(mysqlDB, qudersRedis)
 	frameworkRepository := repository.NewFrameworkStore(mysqlDB, qudersRedis)
 	registrationQuestionRepository := repository.NewRegistrationQuestionStore(mysqlDB, qudersRedis)
+	questionAnswerRepository := repository.NewQuestionAnswerStore(mysqlDB, qudersRedis)
 	handler := controllers.NewHandler(
 		mysqlDB,
 		currencyRepository,
@@ -58,6 +59,7 @@ func main() {
 		programingLanguageRepository,
 		frameworkRepository,
 		registrationQuestionRepository,
+		questionAnswerRepository,
 	)
 	g := e.Group("/api/v1", middleware.JWTWithConfig(utils.JWTSecretKey, handler))
 	routes.CurrencyRoutes(g, handler)
@@ -69,5 +71,6 @@ func main() {
 	routes.ProgramingLanguageRoutes(g, handler)
 	routes.FrameworkRoutes(g, handler)
 	routes.RegistrationQuestionRoutes(g, handler)
+	routes.QuestionAnswerRoutes(g, handler)
 	e.Logger.Fatal(e.Start(":9029"))
 }
